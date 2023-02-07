@@ -1,12 +1,12 @@
 
-## An√°lise de Correspond√™ncia M√∫ltipla
+## An·lise de CorrespondÍncia M˙ltipla
 
 # MBA DSA USP ESALQ
 # Prof. Wilson Tarantin Jr.
 
 # Fonte: https://www.kaggle.com/code/jiagengchang/heart-disease-multiple-correspondence-analysis
 
-# Instala√ß√£o e carregamento dos pacotes utilizados
+# InstalaÁ„o e carregamento dos pacotes utilizados
 pacotes <- c("plotly", 
              "tidyverse", 
              "ggrepel",
@@ -31,11 +31,11 @@ if(sum(as.numeric(!pacotes %in% installed.packages())) != 0){
 dados_apt <- read.csv("df_apart_cat_r.csv", sep=';', encoding = 'UTF-8')
 
 
-# A fun√ß√£o para a cria√ß√£o da ACM pede que sejam utilizados "fatores"
+# A funÁ„o para a criaÁ„o da ACM pede que sejam utilizados "fatores"
 dados_apt <- as.data.frame(unclass(dados_apt), stringsAsFactors=TRUE)
 dados_apt[] = lapply(dados_apt, as.factor)
 
-# Tabelas de conting√™ncia (todas apresentam associa√ß√£o com alguma vari√°vel?)
+# Tabelas de contingÍncia (todas apresentam associaÁ„o com alguma vari·vel?)
 sjt.xtab(var.row = dados_apt$QUARTO,
          var.col = dados_apt$PRECO,
          show.exp = TRUE,
@@ -76,68 +76,68 @@ sjt.xtab(var.row = dados_apt$BAIRRO,
 
 ACM <- dudi.acm(dados_apt, scannf = FALSE, nf = 3)
 
-# Analisando as vari√¢ncias de cada dimens√£o
+# Analisando as vari‚ncias de cada dimens„o
 perc_variancia <- (ACM$eig / sum(ACM$eig)) * 100
 paste0(round(perc_variancia,2),"%")
 
-# Quantidade de categorias por vari√°vel
+# Quantidade de categorias por vari·vel
 quant_categorias <- apply(dados_apt,
                           MARGIN =  2,
                           FUN = function(x) nlevels(as.factor(x)))
 
-# Consolidando as coordenadas-padr√£o obtidas por meio da matriz bin√°ria
-df_ACM <- data.frame(ACM$c1, Vari√°vel = rep(names(quant_categorias),
+# Consolidando as coordenadas-padr„o obtidas por meio da matriz bin·ria
+df_ACM <- data.frame(ACM$c1, Vari·vel = rep(names(quant_categorias),
                                             quant_categorias))
 
 # Plotando o mapa perceptual
 df_ACM %>%
   rownames_to_column() %>%
   rename(Categoria = 1) %>%
-  ggplot(aes(x = CS1, y = CS2, label = Categoria, color = Vari√°vel)) +
+  ggplot(aes(x = CS1, y = CS2, label = Categoria, color = Vari·vel)) +
   geom_point() +
   geom_label_repel() +
   geom_vline(aes(xintercept = 0), linetype = "longdash", color = "grey48") +
   geom_hline(aes(yintercept = 0), linetype = "longdash", color = "grey48") +
-  labs(x = paste("Dimens√£o 1:", paste0(round(perc_variancia[1], 2), "%")),
-       y = paste("Dimens√£o 2:", paste0(round(perc_variancia[2], 2), "%"))) +
+  labs(x = paste("Dimens„o 1:", paste0(round(perc_variancia[1], 2), "%")),
+       y = paste("Dimens„o 2:", paste0(round(perc_variancia[2], 2), "%"))) +
   theme_bw()
 
-# Poder√≠amos fazer o mapa com as coordenadas obtidas por meio da matriz de Burt
+# PoderÌamos fazer o mapa com as coordenadas obtidas por meio da matriz de Burt
 
-# Consolidando as coordenadas-padr√£o obtidas por meio da matriz de Burt
-df_ACM_B <- data.frame(ACM$co, Vari√°vel = rep(names(quant_categorias),
+# Consolidando as coordenadas-padr„o obtidas por meio da matriz de Burt
+df_ACM_B <- data.frame(ACM$co, Vari·vel = rep(names(quant_categorias),
                                               quant_categorias))
 
 # Plotando o mapa perceptual
 df_ACM_B %>%
   rownames_to_column() %>%
   rename(Categoria = 1) %>%
-  ggplot(aes(x = Comp1, y = Comp2, label = Categoria, color = Vari√°vel)) +
+  ggplot(aes(x = Comp1, y = Comp2, label = Categoria, color = Vari·vel)) +
   geom_point() +
   geom_label_repel() +
   geom_vline(aes(xintercept = 0), linetype = "longdash", color = "grey48") +
   geom_hline(aes(yintercept = 0), linetype = "longdash", color = "grey48") +
-  labs(x = paste("Dimens√£o 1:", paste0(round(perc_variancia[1], 2), "%")),
-       y = paste("Dimens√£o 2:", paste0(round(perc_variancia[2], 2), "%"))) +
+  labs(x = paste("Dimens„o 1:", paste0(round(perc_variancia[1], 2), "%")),
+       y = paste("Dimens„o 2:", paste0(round(perc_variancia[2], 2), "%"))) +
   theme_bw()
 
-# √â poss√≠vel obter as coordenadas das observa√ß√µes
+# … possÌvel obter as coordenadas das observaÁıes
 df_coord_obs <- ACM$li
 
 # Plotando o mapa perceptual
 df_coord_obs %>%
-  ggplot(aes(x = Axis1, y = Axis2, color = dados_apt$Doen√ßa_Card)) +
+  ggplot(aes(x = Axis1, y = Axis2, color = dados_apt$DoenÁa_Card)) +
   geom_point() +
   geom_vline(aes(xintercept = 0), linetype = "longdash", color = "grey48") +
   geom_hline(aes(yintercept = 0), linetype = "longdash", color = "grey48") +
-  labs(x = paste("Dimens√£o 1:", paste0(round(perc_variancia[1], 2), "%")),
-       y = paste("Dimens√£o 2:", paste0(round(perc_variancia[2], 2), "%")),
-       color = "Doen√ßa Card√≠aca") +
+  labs(x = paste("Dimens„o 1:", paste0(round(perc_variancia[1], 2), "%")),
+       y = paste("Dimens„o 2:", paste0(round(perc_variancia[2], 2), "%")),
+       color = "DoenÁa CardÌaca") +
   theme_bw()
 
 
 
-# Mapa perceptual em 3D (3 primeiras dimens√µes)
+# Mapa perceptual em 3D (3 primeiras dimensıes)
 ACM_3D <- plot_ly()
 
 # Adicionando as coordenadas
